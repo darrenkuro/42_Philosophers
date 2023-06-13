@@ -6,15 +6,30 @@
 /*   By: dlu <dlu@student.42berlin.de>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 11:30:01 by dlu               #+#    #+#             */
-/*   Updated: 2023/06/11 21:31:25 by dlu              ###   ########.fr       */
+/*   Updated: 2023/06/13 21:47:16 by dlu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
+/* Initialize philosopher. */
+static int	init_philo(t_data *data)
+{
+	int	i;
+
+	i = -1;
+	while (++i < data->philo_nbr)
+	{
+		
+	}
+}
+
 /* Initialize data with given args, return FALSE if any arg is invalid. */
 static int	init_data(int ac, char **av, t_data *data)
 {
+	int	i;
+
+	data->eat_time = ERROR;
 	data->philo_nbr = ft_parse_arg(av[1]);
 	data->die_ms = ft_parse_arg(av[2]);
 	data->eat_ms = ft_parse_arg(av[3]);
@@ -26,10 +41,23 @@ static int	init_data(int ac, char **av, t_data *data)
 		data->eat_time = ft_parse_arg(av[5]);
 	else if (ac == 6)
 		return (FALSE);
-	else
-		data->eat_time = ERROR;
+	data->philos = (t_philo *) malloc(sizeof(t_philo) * data->philo_nbr);
+	if (!data->philos)
+		return (FALSE);
+	data->forks = (t_mutex *) malloc(sizeof(t_mutex) * data->philo_nbr);
+	if (!data->forks)
+		return (free(data->philos), FALSE);
+	i = -1;
+	while (++i < data->philo_nbr)
+		pthread_mutex_init(data->forks[i], NULL);
+	data->start_ts = ft_gettime();
 	return (TRUE);
 }
+/*
+void	*ft_routine(void *data)
+{
+}
+*/
 
 int	main(int ac, char **av)
 {
@@ -39,7 +67,7 @@ int	main(int ac, char **av)
 		return (ft_perror(ERR_ARGNUM), EXIT_FAILURE);
 	if (!init_data(ac, av, &data))
 		return (ft_perror(ERR_ARGFMT), EXIT_FAILURE);
-	if (data->philo_nbr == 0 || data->eat_time == 0)
+	if (data.philo_nbr == 0 || data.eat_time == 0)
 		return (EXIT_SUCCESS);
 	return (EXIT_SUCCESS);
 }
