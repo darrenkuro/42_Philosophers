@@ -6,7 +6,7 @@
 /*   By: dlu <dlu@student.42berlin.de>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 11:30:01 by dlu               #+#    #+#             */
-/*   Updated: 2023/06/14 04:02:53 by dlu              ###   ########.fr       */
+/*   Updated: 2023/06/14 11:34:33 by dlu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ static int	init_philo(t_data *data)
 	while (++i < data->philo_nbr)
 	{
 		data->philos[i].id = i + 1;
+		data->philos[i].eat_ms = data->eat_ms;
+		data->philos[i].sleep_ms = data->sleep_ms;
 		data->philos[i].fork_r = data->forks[i];
 		if (i > 0)
 			data->philos[i].fork_l = data->forks[i - 1];
@@ -57,11 +59,6 @@ static int	init_data(int ac, char **av, t_data *data)
 	data->start_ts = ft_gettime();
 	return (TRUE);
 }
-/*
-void	*ft_routine(void *data)
-{
-}
-*/
 
 int	main(int ac, char **av)
 {
