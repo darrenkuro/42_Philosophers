@@ -6,13 +6,13 @@
 /*   By: dlu <dlu@student.42berlin.de>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 11:30:01 by dlu               #+#    #+#             */
-/*   Updated: 2023/06/13 21:47:30 by dlu              ###   ########.fr       */
+/*   Updated: 2023/06/14 04:02:53 by dlu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-/* Initialize philosopher. */
+/* Initialize philosopher and create the threads. */
 static int	init_philo(t_data *data)
 {
 	int	i;
@@ -20,7 +20,12 @@ static int	init_philo(t_data *data)
 	i = -1;
 	while (++i < data->philo_nbr)
 	{
+		data->philos[i].id = i + 1;
+		data->philos[i].fork_r = data->forks[i];
+		if (i > 0)
+			data->philos[i].fork_l = data->forks[i - 1];
 	}
+	data->philos[0].fork_l = data->forks[data->philo_nbr - 1];
 }
 
 /* Initialize data with given args, return FALSE if any arg is invalid. */
