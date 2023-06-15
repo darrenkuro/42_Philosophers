@@ -6,7 +6,7 @@
 /*   By: dlu <dlu@student.42berlin.de>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 11:30:01 by dlu               #+#    #+#             */
-/*   Updated: 2023/06/15 05:16:03 by dlu              ###   ########.fr       */
+/*   Updated: 2023/06/15 05:15:12 by dlu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,12 +81,5 @@ int	main(int ac, char **av)
 		return (EXIT_SUCCESS);
 	init_philo(&data);
 	i = -1;
-	while (++i < data.philo_nbr)
-		pthread_create(&data.philos[i].th, NULL, ft_routine, &data.philos[i]);
-	pthread_create(&data.psychopomp, NULL, ft_psychopomp, &data);
-	i = -1;
-	while (++i < data.philo_nbr)
-		pthread_detach(data.philos[i].th);
-	pthread_join(data.psychopomp, NULL);
 	return (EXIT_SUCCESS);
 }
