@@ -6,7 +6,7 @@
 /*   By: dlu <dlu@student.42berlin.de>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 11:31:02 by dlu               #+#    #+#             */
-/*   Updated: 2023/06/15 04:48:45 by dlu              ###   ########.fr       */
+/*   Updated: 2023/06/15 06:03:50 by dlu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ void	*ft_routine(void *arg)
 		usleep(500);
 	while (!philo->someone_died)
 	{
+		pthread_mutex_lock(&philo->death);
 		ft_log(philo, (t_act) THINK);
 		if (philo->id % 2 == 0)
 			ft_eat_even(philo);
@@ -67,7 +68,10 @@ void	*ft_routine(void *arg)
 			ft_eat_odd(philo);
 		ft_log(philo, (t_act) SLEEP);
 		usleep(philo->sleep_ms * 1000);
+		pthread_mutex_unlock(&philo->death);
+		usleep(500);
 	}
+	printf("%d has returned\n", philo->id);
 	return (NULL);
 }
 
@@ -75,6 +79,7 @@ void	*ft_psychopomp(void *arg)
 {
 	t_data *data;
 	int		i;
+	int		j;
 
 	data = (t_data *) arg;
 	while (TRUE)
@@ -88,12 +93,12 @@ void	*ft_psychopomp(void *arg)
 				&& ft_gettime() - data->philos[i].last_meal > data->die_ms)
 			{
 				ft_log(&data->philos[i], (t_act) DIED);
-				i = -1;
-				while (++i < data->philo_nbr)
+				j = -1;
+				while (++j < data->philo_nbr)
 				{
-					pthread_mutex_lock(data->philos[i].death);
-					data->philos[i].someone_died = 1;
-					pthread_mutex_unlock(data->philos[i].death);
+					pthread_mutex_lock(&data->philos[i].death);
+					data->philos[j].someone_died = 1;
+					pthread_mutex_unlock(&data->philos[i].death);
 				}
 				return (NULL);
 			}
