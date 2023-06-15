@@ -6,14 +6,14 @@
 #    By: dlu <dlu@student.42berlin.de>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/11 11:24:01 by dlu               #+#    #+#              #
-#    Updated: 2023/06/11 11:57:11 by dlu              ###   ########.fr        #
+#    Updated: 2023/06/15 02:18:27 by dlu              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME	:=	philo
 
 SRCDIR	:=	srcs
-_SRC	:=	main.c utils.c
+_SRC	:=	main.c utils.c action.c
 SRC		:=	$(addprefix $(SRCDIR)/, $(_SRC))
 
 OBJDIR	:=	objs
@@ -22,6 +22,7 @@ OBJ		:=	$(addprefix $(OBJDIR)/, $(_OBJ))
 
 CC		:=	cc
 RM		:=	/bin/rm -f
+#CFLAGS	:=	-Wall -Wextra -Werror -g -fsanitize=thread
 CFLAGS	:=	-Wall -Wextra -Werror -g
 
 all: $(NAME)
