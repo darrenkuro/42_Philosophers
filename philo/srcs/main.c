@@ -6,7 +6,7 @@
 /*   By: dlu <dlu@student.42berlin.de>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 11:30:01 by dlu               #+#    #+#             */
-/*   Updated: 2023/06/15 06:01:48 by dlu              ###   ########.fr       */
+/*   Updated: 2023/06/16 11:02:24 by dlu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static void	init_philo(t_data *data)
 	int	i;
 
 	pthread_mutex_init(&data->write, NULL);
-	//pthread_mutex_init(&data->death, NULL);
+	pthread_mutex_init(&data->death, NULL);
 	i = -1;
 	while (++i < data->philo_nbr)
 		pthread_mutex_init(&data->forks[i], NULL);
@@ -26,12 +26,13 @@ static void	init_philo(t_data *data)
 	while (++i < data->philo_nbr)
 	{
 		pthread_mutex_init(&data->philos[i].meal, NULL);
-		pthread_mutex_init(&data->philos[i].death, NULL);
+		//pthread_mutex_init(&data->philos[i].death, NULL);
 		data->philos[i].id = i + 1;
 		data->philos[i].eat_ms = data->eat_ms;
 		data->philos[i].sleep_ms = data->sleep_ms;
 		data->philos[i].someone_died = 0;
 		data->philos[i].write = &data->write;
+		data->philos[i].death = &data->death;
 		data->philos[i].left_meal = data->eat_time;
 		data->philos[i].start_ts = data->start_ts;
 		data->philos[i].last_meal = ft_gettime();

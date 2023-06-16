@@ -6,7 +6,7 @@
 /*   By: dlu <dlu@student.42berlin.de>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 11:37:09 by dlu               #+#    #+#             */
-/*   Updated: 2023/06/15 06:00:53 by dlu              ###   ########.fr       */
+/*   Updated: 2023/06/16 10:49:30 by dlu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ typedef struct s_philo
 	t_mutex	*fork_l;
 	t_mutex	*fork_r;
 	t_mutex	*write;
-	t_mutex	death;
+	t_mutex	*death;
 	t_mutex	meal;
 	t_pth	th;
 	int		id;

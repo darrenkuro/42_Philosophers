@@ -6,7 +6,7 @@
 /*   By: dlu <dlu@student.42berlin.de>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 11:31:02 by dlu               #+#    #+#             */
-/*   Updated: 2023/06/15 06:05:38 by dlu              ###   ########.fr       */
+/*   Updated: 2023/06/16 11:06:36 by dlu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,9 +58,10 @@ void	*ft_routine(void *arg)
 	philo = (t_philo *) arg;
 	if (philo->id % 2 == 0)
 		usleep(500);
+	pthread_mutex_lock(philo->death);
 	while (!philo->someone_died)
 	{
-		pthread_mutex_lock(&philo->death);
+		pthread_mutex_unlock(philo->death);
 		ft_log(philo, (t_act) THINK);
 		if (philo->id % 2 == 0)
 			ft_eat_even(philo);
@@ -68,10 +69,11 @@ void	*ft_routine(void *arg)
 			ft_eat_odd(philo);
 		ft_log(philo, (t_act) SLEEP);
 		usleep(philo->sleep_ms * 1000);
-		pthread_mutex_unlock(&philo->death);
-		usleep(500);
+		pthread_mutex_lock(philo->death);
+		//usleep(500);
 	}
 	printf("%d has returned\n", philo->id);
+	pthread_mutex_unlock(philo->death);
 	return (NULL);
 }
 
@@ -93,13 +95,16 @@ void	*ft_psychopomp(void *arg)
 				&& ft_gettime() - data->philos[i].last_meal > data->die_ms)
 			{
 				ft_log(&data->philos[i], (t_act) DIED);
+				pthread_mutex_lock(&data->death);
 				j = -1;
 				while (++j < data->philo_nbr)
 				{
-					pthread_mutex_lock(&data->philos[i].death);
+					//pthread_mutex_lock(&data->philos[i].death);
 					data->philos[j].someone_died = 1;
-					pthread_mutex_unlock(&data->philos[i].death);
+					//pthread_mutex_unlock(&data->philos[i].death);
 				}
+				pthread_mutex_unlock(&data->philos[i].meal);
+				pthread_mutex_unlock(&data->death);
 				return (NULL);
 			}
 			if (!data->philos[i].left_meal)
@@ -108,6 +113,6 @@ void	*ft_psychopomp(void *arg)
 		}
 		if (data->philo_done == data->philo_nbr)
 			return (NULL);
-		//usleep(1000);
+		usleep(500);
 	}
 }
