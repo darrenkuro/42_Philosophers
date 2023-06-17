@@ -6,7 +6,7 @@
 /*   By: dlu <dlu@student.42berlin.de>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 11:31:02 by dlu               #+#    #+#             */
-/*   Updated: 2023/06/17 23:53:56 by dlu              ###   ########.fr       */
+/*   Updated: 2023/06/18 00:00:06 by dlu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 /* Eating routine for even number philosopher, left fork first. */
 static void	ft_eat_even(t_philo *philo)
 {
+	if (ft_gettime() - philo->last_meal < philo->eat_ms + philo->sleep_ms + 10)
+		usleep(500);
 	pthread_mutex_lock(philo->fork_l);
 	ft_log(philo, (t_act) FORK);
 	pthread_mutex_lock(philo->fork_r);
@@ -34,6 +36,8 @@ static void	ft_eat_even(t_philo *philo)
 /* Eating routine for odd number philosopher, right fork first. */
 static void	ft_eat_odd(t_philo *philo)
 {
+	if (ft_gettime() - philo->last_meal < philo->eat_ms + philo->sleep_ms + 10)
+		usleep(500);
 	pthread_mutex_lock(philo->fork_r);
 	ft_log(philo, (t_act) FORK);
 	pthread_mutex_lock(philo->fork_l);
