@@ -6,7 +6,7 @@
 /*   By: dlu <dlu@student.42berlin.de>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 11:37:09 by dlu               #+#    #+#             */
-/*   Updated: 2023/06/16 10:49:30 by dlu              ###   ########.fr       */
+/*   Updated: 2023/06/17 23:11:23 by dlu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ typedef long long		t_ll;
 typedef unsigned int	t_ui;
 typedef pthread_mutex_t	t_mutex;
 typedef pthread_t		t_pth;
+typedef struct s_data	t_data;
 
 typedef enum e_act
 {
@@ -50,13 +51,17 @@ typedef struct s_philo
 	t_mutex	*death;
 	t_mutex	meal;
 	t_pth	th;
+	t_pth	monitor_th;
 	int		id;
+	int		die_ms;
 	int		eat_ms;
 	int		sleep_ms;
 	int		left_meal;
 	int		someone_died;
+	int		finished;
 	t_ll	last_meal;
 	t_ll	start_ts;
+	t_data	*data;
 }	t_philo;
 
 typedef struct s_data
