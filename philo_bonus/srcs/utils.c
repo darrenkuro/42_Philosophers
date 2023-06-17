@@ -6,7 +6,7 @@
 /*   By: dlu <dlu@student.42berlin.de>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 11:52:05 by dlu               #+#    #+#             */
-/*   Updated: 2023/06/15 04:38:55 by dlu              ###   ########.fr       */
+/*   Updated: 2023/06/17 23:28:23 by dlu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,19 +56,21 @@ void	ft_log(t_philo *philo, t_act act)
 {
 	t_ll	ms;
 
-	pthread_mutex_lock(philo->write);
+	pthread_mutex_lock(&philo->data->death);
+	pthread_mutex_lock(&philo->data->write);
 	ms = ft_gettime() - philo->start_ts;
-	if (act == FORK)
+	if (act == FORK && !philo->someone_died)
 		printf("%*lld %d has taken a fork\n", ALIGN, ms, philo->id);
-	if (act == EAT)
+	if (act == EAT && !philo->someone_died)
 		printf("%*lld %d is eating\n", ALIGN, ms, philo->id);
-	if (act == SLEEP)
+	if (act == SLEEP && !philo->someone_died)
 		printf("%*lld %d is sleeping\n", ALIGN, ms, philo->id);
-	if (act == THINK)
+	if (act == THINK && !philo->someone_died)
 		printf("%*lld %d is thinking\n", ALIGN, ms, philo->id);
-	if (act == DIED)
+	if (act == DIED && !philo->someone_died)
 		printf("%*lld %d has died\n", ALIGN, ms, philo->id);
-	pthread_mutex_unlock(philo->write);
+	pthread_mutex_unlock(&philo->data->write);
+	pthread_mutex_unlock(&philo->data->death);
 }
 
 /* Get the current time in ms. */
