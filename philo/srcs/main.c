@@ -6,7 +6,7 @@
 /*   By: dlu <dlu@student.42berlin.de>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 11:30:01 by dlu               #+#    #+#             */
-/*   Updated: 2023/06/18 00:19:04 by dlu              ###   ########.fr       */
+/*   Updated: 2023/06/18 01:57:41 by dlu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ int	main(int ac, char **av)
 		return (ft_perror(ERR_ARGNUM), EXIT_FAILURE);
 	if (!init_data(ac, av, &data))
 		return (ft_perror(ERR_ARGFMT), EXIT_FAILURE);
-	if (data.philo_nbr == 0)
+	if (data.philo_nbr == 0 || data.eat_time == 0)
 		return (free_and_destory(&data), EXIT_SUCCESS);
 	i = -1;
 	while (++i < data.philo_nbr)
