@@ -6,7 +6,7 @@
 #    By: dlu <dlu@student.42berlin.de>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/11 11:24:01 by dlu               #+#    #+#              #
-#    Updated: 2023/06/18 00:07:30 by dlu              ###   ########.fr        #
+#    Updated: 2023/06/18 21:17:58 by dlu              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,27 +21,26 @@ _OBJ	:=	$(_SRC:.c=.o)
 OBJ		:=	$(addprefix $(OBJDIR)/, $(_OBJ))
 
 CC		:=	cc
-RM		:=	/bin/rm -f
+RM		:=	/bin/rm -rf
 #CFLAGS	:=	-Wall -Wextra -Werror -g -fsanitize=thread
 CFLAGS	:=	-Wall -Wextra -Werror -g
 
 all: $(NAME)
 
-$(NAME): init $(OBJ)
+$(NAME): $(OBJ)
 	$(CC) $(CFLAGS) -o $@ $(OBJ)
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
+	@mkdir -p $(OBJDIR)
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 clean:
 	$(RM) $(OBJ)
 
 fclean: clean
+	$(RM) $(OBJDIR)
 	$(RM) $(NAME)
 
 re: fclean all
 
-init:
-	@mkdir -p $(OBJDIR)
-
-.phony: all clean flcean re init
+.phony: all clean flcean re
