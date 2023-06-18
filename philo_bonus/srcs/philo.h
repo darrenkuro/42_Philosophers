@@ -6,7 +6,7 @@
 /*   By: dlu <dlu@student.42berlin.de>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 11:37:09 by dlu               #+#    #+#             */
-/*   Updated: 2023/06/18 00:12:05 by dlu              ###   ########.fr       */
+/*   Updated: 2023/06/18 11:59:45 by dlu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,17 +65,14 @@ typedef struct s_philo
 typedef struct s_data
 {
 	int		philo_nbr;
-	int		philo_done;
 	int		die_ms;
 	int		eat_ms;
 	int		sleep_ms;
 	int		eat_time;
-	t_ll	start_ts;
 	t_philo	*philos;
 	t_mutex	*forks;
 	t_mutex	write;
 	t_mutex	death;
-	t_pth	psychopomp;
 }	t_data;
 
 void	ft_perror(const char *msg);
