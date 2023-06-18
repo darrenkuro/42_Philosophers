@@ -6,7 +6,7 @@
 /*   By: dlu <dlu@student.42berlin.de>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 19:01:18 by dlu               #+#    #+#             */
-/*   Updated: 2023/06/18 20:38:11 by dlu              ###   ########.fr       */
+/*   Updated: 2023/06/18 21:04:56 by dlu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	init_sems(t_data *data)
 	data->end = sem_open(SEM_END, O_CREAT | O_EXCL, 0700, 0);
 }
 
-/* Initialize philosopher. */
+/* Initialize philosophers. */
 void	init_philos(t_data *data)
 {
 	int	i;
