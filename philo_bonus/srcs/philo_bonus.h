@@ -6,7 +6,7 @@
 /*   By: dlu <dlu@student.42berlin.de>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 11:37:09 by dlu               #+#    #+#             */
-/*   Updated: 2023/06/18 21:05:43 by dlu              ###   ########.fr       */
+/*   Updated: 2023/06/18 21:49:51 by dlu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@
 # define ERR_ARGFMT	"Error: Only numeric, non-negative, int range args.\n"
 # define ERR_PHILO	"Error: Too many philosophers, max: 200.\n"
 # define SEM_END	"/end"
+# define SEM_DEATH	"/death"
 # define SEM_FORK	"/fork"
 # define SEM_WRITE	"/write"
 
@@ -83,6 +84,7 @@ typedef struct s_data
 	sem_t	*fork;
 	sem_t	*write;
 	sem_t	*end;
+	sem_t	*death;
 }	t_data;
 
 int		ft_strlen(const char *str);

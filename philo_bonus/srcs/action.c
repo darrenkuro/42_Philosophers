@@ -6,7 +6,7 @@
 /*   By: dlu <dlu@student.42berlin.de>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 11:31:02 by dlu               #+#    #+#             */
-/*   Updated: 2023/06/18 21:03:19 by dlu              ###   ########.fr       */
+/*   Updated: 2023/06/18 21:50:53 by dlu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void	*ft_psychopomp(void *arg)
 		{
 			ft_log(philo, (t_act) DIED);
 			sem_wait(philo->data->write);
-			sem_post(philo->data->end);
+			sem_post(philo->data->death);
 			return (NULL);
 		}
 		sem_post(philo->meal);

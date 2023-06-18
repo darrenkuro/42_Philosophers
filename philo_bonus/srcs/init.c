@@ -6,7 +6,7 @@
 /*   By: dlu <dlu@student.42berlin.de>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 19:01:18 by dlu               #+#    #+#             */
-/*   Updated: 2023/06/18 21:04:56 by dlu              ###   ########.fr       */
+/*   Updated: 2023/06/18 21:50:39 by dlu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,11 @@ void	init_sems(t_data *data)
 	sem_unlink(SEM_FORK);
 	sem_unlink(SEM_WRITE);
 	sem_unlink(SEM_END);
+	sem_unlink(SEM_DEATH);
 	data->fork = sem_open(SEM_FORK, O_CREAT | O_EXCL, 0700, data->philo_nbr);
 	data->write = sem_open(SEM_WRITE, O_CREAT | O_EXCL, 0700, 1);
 	data->end = sem_open(SEM_END, O_CREAT | O_EXCL, 0700, 0);
+	data->death = sem_open(SEM_DEATH, O_CREAT | O_EXCL, 0700, 0);
 }
 
 /* Initialize philosophers. */

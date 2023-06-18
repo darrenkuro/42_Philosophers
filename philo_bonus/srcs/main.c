@@ -6,7 +6,7 @@
 /*   By: dlu <dlu@student.42berlin.de>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 11:30:01 by dlu               #+#    #+#             */
-/*   Updated: 2023/06/18 21:05:14 by dlu              ###   ########.fr       */
+/*   Updated: 2023/06/18 22:21:30 by dlu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,11 @@ static void	free_and_destory(t_data *data)
 	sem_close(data->write);
 	sem_close(data->fork);
 	sem_close(data->end);
+	sem_close(data->death);
 	sem_unlink(SEM_WRITE);
 	sem_unlink(SEM_FORK);
 	sem_unlink(SEM_END);
+	sem_unlink(SEM_DEATH);
 	free(data->philos);
 }
 
@@ -39,10 +41,11 @@ static void	*ft_monitor(void *arg)
 	int		i;
 
 	data = (t_data *) arg;
-	sem_wait(data->end);
+	sem_wait(data->death);
 	i = -1;
 	while (++i < data->philo_nbr)
 		kill(data->philos[i].pid, SIGKILL);
+	sem_post(data->end);
 	return (NULL);
 }
 
@@ -86,5 +89,7 @@ int	main(int ac, char **av)
 	i = -1;
 	while (++i < data.philo_nbr)
 		waitpid(data.philos[i].pid, &data.philos[i].exit_status, 0);
+	sem_post(data.end);
+	sem_wait(data.end);
 	return (free_and_destory(&data), EXIT_SUCCESS);
 }

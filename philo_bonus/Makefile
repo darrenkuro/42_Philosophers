@@ -6,7 +6,7 @@
 #    By: dlu <dlu@student.42berlin.de>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/11 11:24:01 by dlu               #+#    #+#              #
-#    Updated: 2023/06/18 21:16:30 by dlu              ###   ########.fr        #
+#    Updated: 2023/06/18 22:19:54 by dlu              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,8 +22,8 @@ OBJ		:=	$(addprefix $(OBJDIR)/, $(_OBJ))
 
 CC		:=	cc
 RM		:=	/bin/rm -rf
-#CFLAGS	:=	-Wall -Wextra -Werror -g -fsanitize=thread
-CFLAGS	:=	-Wall -Wextra -Werror -g
+CFLAGS	:=	-Wall -Wextra -Werror -g -fsanitize=thread
+#CFLAGS	:=	-Wall -Wextra -Werror -g
 
 all: $(NAME)
 
