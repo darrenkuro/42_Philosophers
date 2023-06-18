@@ -6,7 +6,7 @@
 /*   By: dlu <dlu@student.42berlin.de>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 11:37:09 by dlu               #+#    #+#             */
-/*   Updated: 2023/06/18 11:59:45 by dlu              ###   ########.fr       */
+/*   Updated: 2023/06/18 12:06:39 by dlu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define PHILO_H
 
 # include <sys/time.h>
+# include <semaphore.h>
 # include <pthread.h>
 # include <stdlib.h>
 # include <unistd.h>
@@ -30,7 +31,6 @@
 
 typedef long long		t_ll;
 typedef unsigned int	t_ui;
-typedef pthread_mutex_t	t_mutex;
 typedef pthread_t		t_pth;
 typedef struct s_data	t_data;
 
@@ -45,10 +45,8 @@ typedef enum e_act
 
 typedef struct s_philo
 {
-	t_mutex	*fork_l;
-	t_mutex	*fork_r;
-	t_mutex	meal;
-	t_pth	th;
+	sem_t	*meal;
+	pid_t	pid;
 	t_pth	monitor_th;
 	int		id;
 	int		die_ms;
@@ -70,9 +68,9 @@ typedef struct s_data
 	int		sleep_ms;
 	int		eat_time;
 	t_philo	*philos;
-	t_mutex	*forks;
-	t_mutex	write;
-	t_mutex	death;
+	sem_t	*forks;
+	sem_t	*write;
+	sem_t	*death;
 }	t_data;
 
 void	ft_perror(const char *msg);
