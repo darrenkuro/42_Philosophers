@@ -6,70 +6,13 @@
 /*   By: dlu <dlu@student.42berlin.de>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/11 11:30:01 by dlu               #+#    #+#             */
-/*   Updated: 2023/06/18 12:07:06 by dlu              ###   ########.fr       */
+/*   Updated: 2023/06/18 20:54:05 by dlu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "philo_bonus.h"
 
-/* Initialize philosopher and mutexes. */
-static void	init_philos(t_data *data)
-{
-	int	i;
-
-	i = -1;
-	while (++i < data->philo_nbr)
-		pthread_mutex_init(&data->forks[i], NULL);
-	i = -1;
-	while (++i < data->philo_nbr)
-	{
-		pthread_mutex_init(&data->philos[i].meal, NULL);
-		data->philos[i].id = i + 1;
-		data->philos[i].someone_died = 0;
-		data->philos[i].finished = 0;
-		data->philos[i].die_ms = data->die_ms;
-		data->philos[i].sleep_ms = data->sleep_ms;
-		data->philos[i].eat_ms = data->eat_ms;
-		data->philos[i].left_meal = data->eat_time;
-		data->philos[i].start_ts = ft_gettime();
-		data->philos[i].last_meal = ft_gettime();
-		data->philos[i].fork_r = &data->forks[i];
-		data->philos[i].data = data;
-		if (i > 0)
-			data->philos[i].fork_l = &data->forks[i - 1];
-	}
-	if (data->philo_nbr)
-		data->philos[0].fork_l = &data->forks[data->philo_nbr - 1];
-}
-
-/* Initialize data with given args, return FALSE if any arg is invalid. */
-static int	init_data(int ac, char **av, t_data *data)
-{
-	data->eat_time = ERROR;
-	data->philo_nbr = ft_parse_arg(av[1]);
-	data->die_ms = ft_parse_arg(av[2]);
-	data->eat_ms = ft_parse_arg(av[3]);
-	data->sleep_ms = ft_parse_arg(av[4]);
-	if (data->philo_nbr == ERROR || data->die_ms == ERROR
-		|| data->eat_ms == ERROR || data->sleep_ms == ERROR)
-		return (FALSE);
-	if (ac == 6 && ft_parse_arg(av[5]) != ERROR)
-		data->eat_time = ft_parse_arg(av[5]);
-	else if (ac == 6)
-		return (FALSE);
-	data->philos = (t_philo *) malloc(sizeof(t_philo) * data->philo_nbr);
-	if (!data->philos)
-		return (FALSE);
-	data->forks = (t_mutex *) malloc(sizeof(t_mutex) * data->philo_nbr);
-	if (!data->forks)
-		return (free(data->philos), FALSE);
-	pthread_mutex_init(&data->write, NULL);
-	pthread_mutex_init(&data->death, NULL);
-	init_philos(data);
-	return (TRUE);
-}
-
-/* Free memory and destory mutexes before exit. */
+/* Kill processes, free memory and destory mutexes before exit. */
 static void	free_and_destory(t_data *data)
 {
 	int	i;
@@ -77,13 +20,46 @@ static void	free_and_destory(t_data *data)
 	i = -1;
 	while (++i < data->philo_nbr)
 	{
-		pthread_mutex_destroy(&data->philos[i].meal);
-		pthread_mutex_destroy(&data->forks[i]);
+		sem_close(data->philos[i].meal);
+		sem_unlink(data->philos[i].sem_name);
 	}
-	pthread_mutex_destroy(&data->write);
-	pthread_mutex_destroy(&data->death);
+	sem_close(data->write);
+	sem_close(data->fork);
+	sem_close(data->end);
+	sem_unlink(SEM_WRITE);
+	sem_unlink(SEM_FORK);
+	sem_unlink(SEM_END);
 	free(data->philos);
-	free(data->forks);
+}
+
+/* Kill all child processes when receiving end semaphore. */
+static void	*ft_monitor(void *arg)
+{
+	t_data	*data;
+	int		i;
+
+	data = (t_data *) arg;
+	sem_wait(data->end);
+	i = -1;
+	while (++i < data->philo_nbr)
+		kill(data->philos[i].pid, SIGKILL);
+	return (NULL);
+}
+
+/* Start the philosopher processes, return TRUE only if it's child process. */
+static int	start_philos(t_data *data, int i)
+{
+	data->philos[i].pid = fork();
+	if (data->philos[i].pid == 0)
+	{
+		pthread_create(&data->philos[i].monitor_th, NULL, ft_psychopomp,
+			&data->philos[i]);
+		pthread_detach(data->philos[i].monitor_th);
+		ft_routine(&data->philos[i]);
+		return (TRUE);
+	}
+	else
+		return (FALSE);
 }
 
 int	main(int ac, char **av)
@@ -95,20 +71,20 @@ int	main(int ac, char **av)
 		return (ft_perror(ERR_ARGNUM), EXIT_FAILURE);
 	if (!init_data(ac, av, &data))
 		return (ft_perror(ERR_ARGFMT), EXIT_FAILURE);
+	if (data.philo_nbr > MAX_PHILO)
+		return (ft_perror(ERR_PHILO), EXIT_FAILURE);
+	init_philos(&data);
+	init_sems(&data);
 	if (data.philo_nbr == 0 || data.eat_time == 0)
 		return (free_and_destory(&data), EXIT_SUCCESS);
 	i = -1;
 	while (++i < data.philo_nbr)
-		pthread_create(&data.philos[i].th, NULL, ft_routine, &data.philos[i]);
+		if (start_philos(&data, i))
+			return (EXIT_SUCCESS);
+	pthread_create(&data.monitor, NULL, ft_monitor, &data);
+	pthread_detach(data.monitor);
 	i = -1;
 	while (++i < data.philo_nbr)
-		pthread_create(&data.philos[i].monitor_th, NULL, ft_psychopomp,
-			&data.philos[i]);
-	i = -1;
-	while (++i < data.philo_nbr)
-		pthread_join(data.philos[i].th, NULL);
-	i = -1;
-	while (++i < data.philo_nbr)
-		pthread_join(data.philos[i].monitor_th, NULL);
+		waitpid(data.philos[i].pid, &data.philos[i].exit_status, 0);
 	return (free_and_destory(&data), EXIT_SUCCESS);
 }

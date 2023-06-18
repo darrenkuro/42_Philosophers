@@ -6,7 +6,7 @@
 /*   By: dlu <dlu@student.42berlin.de>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 11:31:02 by dlu               #+#    #+#             */
-/*   Updated: 2023/06/18 00:00:06 by dlu              ###   ########.fr       */
+/*   Updated: 2023/06/18 19:47:44 by dlu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@ void	*ft_routine(void *arg)
 	return (NULL);
 }
 
+/* Stand behind the philosopher to await their death. */
 void	*ft_psychopomp(void *arg)
 {
 	t_philo	*philo;

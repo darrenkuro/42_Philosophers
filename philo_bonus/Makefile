@@ -6,14 +6,14 @@
 #    By: dlu <dlu@student.42berlin.de>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/11 11:24:01 by dlu               #+#    #+#              #
-#    Updated: 2023/06/18 11:46:23 by dlu              ###   ########.fr        #
+#    Updated: 2023/06/18 20:10:23 by dlu              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME	:=	philo_bonus
 
 SRCDIR	:=	srcs
-_SRC	:=	main.c utils.c action.c
+_SRC	:=	main.c utils.c action.c init.c
 SRC		:=	$(addprefix $(SRCDIR)/, $(_SRC))
 
 OBJDIR	:=	objs
